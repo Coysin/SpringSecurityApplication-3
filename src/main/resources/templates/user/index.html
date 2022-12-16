@@ -26,7 +26,7 @@
                         <a class="nav-link" href="/auth/index">Main</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/product">Menu</a>
+                        <a class="nav-link" href="/user/index">Menu</a>
 
                     <li class="nav-item">
                         <a class="nav-link" href="/auth/about">News</a>
@@ -38,85 +38,90 @@
             </div>
         </div>
     </nav>
-    <div class="about">
-        <h5>User account</h5>
-        <!--<a href="/logout">Выйти из личного кабинета</a>-->
-        <form method="post" th:action="@{/logout}">
-            <input class="w-100 btn btn-lg btn-primary" style="width:300px!important" type="submit"
-                   value="Log Out">
-        </form>
-        <p></p>
-        <form method="get" th:action="@{/cart}">
-            <input class="w-100 btn btn-lg btn-primary" style="width:200px!important" type="submit" value="Cart">
-        </form>
-        <p></p>
-        <form method="get" th:action="@{/orders}">
-            <input class="w-100 btn btn-lg btn-primary" style="width:200px!important" type="submit" value="Orders">
-        </form>
+    <div class="container">
+        <div class="row">
+            <div class=" col-md-6 col-sm-6 col-12">
+                            <div class="about">
+                                <h5 th:text="'User account: ' + ${name}"></h5>
+                                <!--<a href="/logout">Выйти из личного кабинета</a>-->
+                                <form method="post" th:action="@{/logout}">
+                                    <input class="w-100 btn btn-lg btn-primary" style="width:300px!important" type="submit"
+                                           value="Log Out">
+                                </form>
+                                <p></p>
+                                <form method="get" th:action="@{/cart}">
+                                    <input class="w-100 btn btn-lg btn-primary" style="width:200px!important" type="submit" value="Cart">
+                                </form>
+                                <p></p>
+                                <form method="get" th:action="@{/orders}">
+                                    <input class="w-100 btn btn-lg btn-primary" style="width:200px!important" type="submit" value="Orders">
+                                </form>
 
-        <form th:method="POST" th:action="@{/product/search1}">
-            <fieldset>
-                <legend>Select options for sorting, searching, filtering</legend>
-                <br>
-                <label for="search">Search by name</label>
-                <input type="search" name="search1" th:value="*{value_search1}" id="search">
-                <br>
-                <p>Price, $</p>
-                <label for="from1">from</label>
-                <input type="text" name="from1" th:value="*{value_price_from1}" id="from1">
-                <label for="to1">to</label>
-                <input type="text" name="to1" th:value="*{value_price_to1}" id="to1">
-                <br>
-                <br>
-                <input type="radio" id="ascending_price" name="price" value="sorted_by_ascending_price">
-                <label for="ascending_price">Sort by price ascending</label>
-                <br>
-                <br>
-                <input type="radio" id="descending_price" name="price" value="sorted_by_descending_price">
-                <label for="descending_price">Sort in descending order by price</label>
-                <br>
-                <hr>
-                <p>Product category</p>
-                <input type="radio" id="furniture" name="category" value="Alcohol">
-                <label for="furniture">Alcohol</label>
-                <br>
-                <br>
-                <input type="radio" id="appliances" name="category" value="Non alcohol">
-                <label for="appliances">Non alcohol</label>
-                <br>
-                <br>
-                <input type="submit" class="w-100 btn btn-lg btn-primary" style="width:150px!important" value="Search">
-            </fieldset>
-        </form>
+                                <form th:method="POST" th:action="@{/user/index/search}">
+                                    <fieldset>
+                                        <legend>Select options for sorting, searching, filtering</legend>
+                                        <br>
+                                        <label for="search">Search by name</label>
+                                        <input type="search" name="search" th:value="*{value_search}" id="search">
+                                        <br>
+                                        <p>Price, $</p>
+                                        <label for="from">from</label>
+                                        <input type="text" name="from" th:value="*{value_price_from}" id="from">
+                                        <br>
+                                        <label for="to">to</label>
+                                        <input type="text" name="to" th:value="*{value_price_to}" id="to">
+                                        <br>
+                                        <br>
+                                        <input type="radio" id="ascending_price" name="price" value="sorted_by_ascending_price">
+                                        <label for="ascending_price">Sort Ascending</label>
 
-        <h5>Result: </h5>
-        <div th:each="product : ${search_product1}">
-            <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="300px">
-            <br>
-            <br>
-            <a th:href="@{/product/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}"></a>
-            <p th:text="'Price: ' + ${product.getPrice()}"></p>
-        </div>
-        <hr>
+                                        <input type="radio" id="descending_price" name="price" value="sorted_by_descending_price">
+                                        <label for="descending_price">Sort Descending</label>
+                                        <br>
+                                        <hr>
+                                        <p>Product category</p>
+                                        <input type="radio" id="alco" name="category" value="Alcohol">
+                                        <label for="alco">Alcohol</label>
 
-        <h5>Available Item: </h5>
-        <div class="product" th:each="product : ${products}">
-            <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="300px">
-            <br>
-            <br>
-            <a th:href="@{/product/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}" id="title"></a>
-            <p th:text="'Цена: ' + ${product.getPrice()}"></p>
-            <a th:href="@{/cart/add/{id}(id=${product.getId()})}">Add to Cart</a>
-<!--            <br>
-            <br>-->
-            <hr>
-        </div>
-        <div class="container">
+                                        <input type="radio" id="nonalco" name="category" value="Non alcohol">
+                                        <label for="nonalco">Non alcohol</label>
+                                        <br>
+                                        <br>
+                                        <input type="submit" class="w-100 btn btn-lg btn-primary" style="width:150px!important" value="Search">
+                                    </fieldset>
+                                </form>
+                                </div>
+            </div>
+            <div class=" col-md-3 col-sm-3 col-12">
+                    <h5>Result: </h5>
+                    <div th:each="product : ${search_product}">
+                        <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="150px">
+                        <br>
+                        <br>
+                        <a th:href="@{/product/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}"></a>
+                        <p th:text="'Price: ' + ${product.getPrice()}"></p>
+                        <a th:href="@{/cart/add/{id}(id=${product.getId()})}">Add to Cart</a>
+                        <hr>
+                    </div>
+            </div>
+            <div class=" col-md-3 col-sm-3 col-12">
+                        <h5>Available Item: </h5>
+                        <div class="product" th:each="product : ${products}">
+                            <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="150px">
+                            <br>
+                            <br>
+                            <a th:href="@{/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}" id="title"></a>
+                            <p th:text="'Цена: ' + ${product.getPrice()}"></p>
+                            <a th:href="@{/cart/add/{id}(id=${product.getId()})}">Add to Cart</a>
+                            <hr>
+                        </div>
+            </div>
+
             <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
                 <p class="col-md-4 mb-0 text-muted">© 2022 Company, Inc</p>
                 <ul class="nav col-md-4 justify-content-end">
                     <li class="nav-item"><a href="/auth/index" class="nav-link px-2 text-muted">Main</a></li>
-                    <li class="nav-item"><a href="/product" class="nav-link px-2 text-muted">Menu</a></li>
+                    <li class="nav-item"><a href="/user/index" class="nav-link px-2 text-muted">Menu</a></li>
                     <li class="nav-item"><a href="/auth/about" class="nav-link px-2 text-muted">News</a></li>
                     <li class="nav-item"><a href="/auth/login" class="nav-link px-2 text-muted">Sign-in</a></li>
                 </ul>

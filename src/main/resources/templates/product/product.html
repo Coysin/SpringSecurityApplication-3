@@ -38,8 +38,11 @@
             </div>
         </div>
     </nav>
-    <div class="about">
-        <form th:method="POST" th:action="@{/product/search}">
+    <div class="container">
+    <div class="row">
+        <div class=" col-md-6 col-sm-6 col-12">
+        <div class="about">
+            <form th:method="POST" th:action="@{/product/search}">
             <fieldset>
                 <legend>Select options for sorting, searching, filtering</legend>
                 <br>
@@ -49,50 +52,55 @@
                 <p>Price, $</p>
                 <label for="from">from</label>
                 <input type="text" name="from" th:value="*{value_price_from}" id="from">
+                <br>
                 <label for="to">to</label>
                 <input type="text" name="to" th:value="*{value_price_to}" id="to">
                 <br>
                 <br>
                 <input type="radio" id="ascending_price" name="price" value="sorted_by_ascending_price">
-                <label for="ascending_price">Sort by price ascending</label>
-                <br>
-                <br>
+                <label for="ascending_price">Sort Ascending</label>
+
                 <input type="radio" id="descending_price" name="price" value="sorted_by_descending_price">
-                <label for="descending_price">Sort in descending order by price</label>
+                <label for="descending_price">Sort Descending</label>
                 <br>
                 <hr>
                 <p>Product category</p>
-                <input type="radio" id="furniture" name="category" value="Alcohol">
-                <label for="furniture">Alcohol</label>
+                <input type="radio" id="first" name="category" value="Alcohol">
+                <label for="first">Alcohol</label>
+
+                <input type="radio" id="second" name="category" value="Non alcohol">
+                <label for="second">Non alcohol</label>
                 <br>
                 <br>
-                <input type="radio" id="appliances" name="category" value="Non alcohol">
-                <label for="appliances">Non alcohol</label>
-                <br>
-                <br>
-                <input type="submit" class="w-100 btn btn-lg btn-primary" style="width:150px!important" value="Search">
+                <input type="submit" class="w-100 btn btn-lg btn-primary" style="width:150px!important" value="search">
             </fieldset>
         </form>
-
+        </div>
+        </div>
+        <div class=" col-md-3 col-sm-3 col-12">
         <h5>Result: </h5>
         <div th:each="product : ${search_product}">
-            <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="300px">
+            <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="150px">
             <br>
             <br>
             <a th:href="@{/product/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}"></a>
             <p th:text="'Цена: ' + ${product.getPrice()}"></p>
+            <hr>
         </div>
-        <hr>
+        </div>
 
+        <div class=" col-md-3 col-sm-3 col-12">
         <h5>Available items: </h5>
                 <div class="product" th:each="product : ${products}">
-                    <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="300px">
+                    <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="150px">
                     <br>
                     <br>
                     <a th:href="@{/product/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}" id="title"></a>
                     <p th:text="'Цена: ' + ${product.getPrice()}"></p>
+                    <hr>
                 </div>
-        <div class="container">
+        </div>
+
             <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
                 <p class="col-md-4 mb-0 text-muted">© 2022 Company, Inc</p>
                 <ul class="nav col-md-4 justify-content-end">

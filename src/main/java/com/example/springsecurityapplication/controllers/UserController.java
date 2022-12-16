@@ -27,18 +27,19 @@ import java.util.UUID;
 public class UserController {
 
     private final OrderRepository orderRepository;
-
+    private final ProductRepository productRepository;
     private final CartRepository cartRepository;
     private final ProductService productService;
 
     @Autowired
-    public UserController(OrderRepository orderRepository, CartRepository cartRepository, ProductService productService) {
+    public UserController(OrderRepository orderRepository, ProductRepository productRepository, CartRepository cartRepository, ProductService productService) {
         this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
         this.cartRepository = cartRepository;
         this.productService = productService;
     }
 
-    @GetMapping("/index")
+    @GetMapping("/user/index")
     public String index(Model model) {
         // Получае объект аутентификации - > c помощью SecurityContextHolder обращаемся к контексту и на нем вызываем метод аутентификации. По сути из потока для текущего пользователя мы получаем объект, который был положен в сессию после аутентификации пользователя
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -56,11 +57,13 @@ public class UserController {
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
 
         String role = personDetails.getPerson().getRole();
+        String name = personDetails.getPerson().getLogin();
 
         if (role.equals("ROLE_ADMIN")) {
             return "redirect:/admin";
         }
         model.addAttribute("products", productService.getAllProduct());
+        model.addAttribute("name", name);
         return "user/index";
     }
 
@@ -100,7 +103,7 @@ public class UserController {
     @GetMapping("/info/{id}")
     public String infoProduct(@PathVariable("id") int id, Model model) {
         model.addAttribute("product", productService.getProductId(id));
-        return "product/infoProduct";
+        return "user/infoProduct";
     }
 
     @GetMapping("/cart/delete/{id}")
@@ -141,6 +144,61 @@ public class UserController {
         List<Order> orderList = orderRepository.findByPerson(personDetails.getPerson());
         model.addAttribute("orders", orderList);
         return "/user/orders";
+    }
+
+    @PostMapping("/user/index/search")
+    public String productSearch(@RequestParam("search") String search, @RequestParam("from") String from, @RequestParam("to") String to, @RequestParam(value = "price", required = false, defaultValue = "") String price, @RequestParam(value = "category", required = false, defaultValue = "") String category, Model model) {
+        if(from.isEmpty()){
+            from = "0";
+        }
+        if(to.isEmpty()){
+            to = "99999999";
+        }
+        // Если диапазон цен от и до не пустой
+        if (!from.isEmpty() & !to.isEmpty()) {
+            // Если сортировка по цене выбрана
+            if (!price.isEmpty()) {
+                // Если в качестве сортировки выбрана сортировка по возрастанию
+                if (price.equals("sorted_by_ascending_price")) {
+                    // Если категория товара не пустая
+                    if (!category.isEmpty()) {
+                        // Если категория 1
+                        if (category.equals("Alcohol")) {
+                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPrice(search.toLowerCase(), Float.parseFloat(from), Float.parseFloat(to), 1));
+                            // Если категория 2
+                        } else if (category.equals("Not alcohol")) {
+                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPrice(search.toLowerCase(), Float.parseFloat(from), Float.parseFloat(to), 2));
+
+                        }
+                        // Если категория не выбрана
+                    } else {
+                        model.addAttribute("search_product", productRepository.findByTitleOrderByPrice(search.toLowerCase(), Float.parseFloat(from), Float.parseFloat(to)));
+                    }
+                    // Если в качестве сортировки выбрана сортировка по убыванию
+                } else if (price.equals("sorted_by_descending_price")) {
+                    if (!category.isEmpty()) {
+                        if (category.equals("Alcohol")) {
+                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceDesc(search.toLowerCase(), Float.parseFloat(from), Float.parseFloat(to), 1));
+                        } else if (category.equals("Non alcohol")) {
+                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceDesc(search.toLowerCase(), Float.parseFloat(from), Float.parseFloat(to), 2));
+
+                        }
+                    } else {
+                        model.addAttribute("search_product", productRepository.findByTitleOrderByPriceDesc(search.toLowerCase(), Float.parseFloat(from), Float.parseFloat(to)));
+                    }
+                }
+            } else {
+                model.addAttribute("search_product", productRepository.findByTitleAndPriceGreaterThanEqualAndPriceLessThan(search.toLowerCase(), Float.parseFloat(from), Float.parseFloat(to)));
+            }
+        } else {
+            model.addAttribute("search_product", productRepository.findByTitleContainingIgnoreCase(search));
+        }
+        model.addAttribute("value_search", search);
+        model.addAttribute("value_price_from", from);
+        model.addAttribute("value_price_to", to);
+        model.addAttribute("products", productService.getAllProduct());
+
+        return "user/index";
     }
 }
 

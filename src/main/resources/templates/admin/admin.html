@@ -38,41 +38,52 @@
             </div>
         </div>
     </nav>
-    <div class="about">
-        <h5>Administration</h5>
-        <form th:method="POST" th:action="@{/logout}">
-            <input class="w-100 btn btn-lg btn-primary" style="width:300px!important" type="submit"
-                   value="Log Out">
-        </form>
-        <p></p>
-        <a class="w-100 btn btn-lg btn-primary" style="width:200px!important" href="/admin/product/add">Add Item</a>
-        <p></p>
-        <h5>Menu: </h5>
-        <hr>
-        <div th:each="product : ${products}">
-            <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="300px">
-            <h5 th:text="'Наименование: ' + ${product.getTitle()}"></h5>
-            <p th:text="'Описание: ' + ${product.getDescription()}"></p>
-            <h5 th:text="'Цена: ' + ${product.getPrice()}"></h5>
-            <p th:text="'Склад: ' + ${product.getWarehouse()}"></p>
-            <p th:text="'Продавец: ' + ${product.getSeller()}"></p>
-            <p th:text="'Категория товара: ' + ${product.getCategory().getName()}"></p>
-            <a th:href="@{/admin/product/edit/{id}(id=${product.getId()})}">Редактировать товар</a>
-            <a th:href="@{/admin/product/delete/{id}(id=${product.getId()})}">Удалить товар</a>
-            <hr>
+    <div class="container">
+        <div class="row">
+            <div class=" col-md-6 col-sm-6 col-12">
+                <div class="about">
+                    <h5>Administration</h5>
+                    <form th:method="POST" th:action="@{/logout}">
+                        <input class="w-100 btn btn-lg btn-primary" style="width:300px!important" type="submit"
+                               value="Log Out">
+                    </form>
+                    <p></p>
+                    <a class="w-100 btn btn-lg btn-primary" style="width:200px!important" href="/admin/product/add">Add Item</a>
+                </div>
+            </div>
+            <div class=" col-md-6 col-sm-6 col-12">
+                    <div class="row" th:each="product : ${products}">
+                        <div class=" col-md-6 col-sm-6 col-12">
+                            <h5>Menu: </h5>
+                            <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="150px">
+                        <h5 th:text="'Наименование: ' + ${product.getTitle()}"></h5>
+                        <p th:text="'Описание: ' + ${product.getDescription()}"></p>
+                        <h5 th:text="'Цена: ' + ${product.getPrice()}"></h5>
+                        </div>
+                        <div class=" col-md-6 col-sm-6 col-12">
+                        <p th:text="'Склад: ' + ${product.getWarehouse()}"></p>
+                        <p th:text="'Продавец: ' + ${product.getSeller()}"></p>
+                        <p th:text="'Категория товара: ' + ${product.getCategory().getName()}"></p>
+                        <a th:href="@{/admin/product/edit/{id}(id=${product.getId()})}">Редактировать товар</a>
+                            <br>
+                        <a th:href="@{/admin/product/delete/{id}(id=${product.getId()})}">Удалить товар</a>
+                        </div>
+                        <hr>
+                    </div>
+            </div>
+                    <div class="container">
+                        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+                            <p class="col-md-4 mb-0 text-muted">© 2022 Company, Inc</p>
+                            <ul class="nav col-md-4 justify-content-end">
+                                <li class="nav-item"><a href="/auth/index" class="nav-link px-2 text-muted">Main</a></li>
+                                <li class="nav-item"><a href="/product" class="nav-link px-2 text-muted">Menu</a></li>
+                                <li class="nav-item"><a href="/auth/about" class="nav-link px-2 text-muted">News</a></li>
+                                <li class="nav-item"><a href="/auth/login" class="nav-link px-2 text-muted">Sign-in</a></li>
+                            </ul>
+                        </footer>
+                    </div>
+                </div>
         </div>
-        <div class="container">
-            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-                <p class="col-md-4 mb-0 text-muted">© 2022 Company, Inc</p>
-                <ul class="nav col-md-4 justify-content-end">
-                    <li class="nav-item"><a href="/auth/index" class="nav-link px-2 text-muted">Main</a></li>
-                    <li class="nav-item"><a href="/product" class="nav-link px-2 text-muted">Menu</a></li>
-                    <li class="nav-item"><a href="/auth/about" class="nav-link px-2 text-muted">News</a></li>
-                    <li class="nav-item"><a href="/auth/login" class="nav-link px-2 text-muted">Sign-in</a></li>
-                </ul>
-            </footer>
-        </div>
-    </div>
 </div>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/js/script.js}"></script>
